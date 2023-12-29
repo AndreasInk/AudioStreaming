@@ -1,39 +1,29 @@
 //
-//  SwiftUIView.swift
+//  AudioPlayer+Loudness.swift
 //  
 //
 //  Created by Andreas Ink on 12/29/23.
 //
 
 import SwiftUI
+import AVFAudio
 
-public extension AudioPlayer: ObservableObject {
+@available(iOS 13.0, *)
+public extension AudioPlayer {
     
-    @Published public var scale: CGFloat = 1
-    
-    public func startMonitoringLoudness() {
+    func streamOutputBuffer() {
         let mixerNode = audioEngine.mainMixerNode
         let format = mixerNode.outputFormat(forBus: 0) // Use the mixer's output format.
         
-        mixerNode.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] (buffer, time) in
-            self?.processAudioBuffer(buffer)
-        }
-    }
-    
-    func processAudioBuffer(_ buffer: AVAudioPCMBuffer) {
-        // Calculate the loudness from the buffer.
-        var rms: Float = 0.0
-        if let channelData = buffer.floatChannelData {
-            for frame in 0..<Int(buffer.frameLength) {
-                let sample = channelData.pointee[frame]
-                rms += sample * sample
+        bufferStream = AsyncStream<AVAudioPCMBuffer> { continuation in
+            mixerNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
+                // Yield the buffer to the stream.
+                continuation.yield(buffer)
             }
-            rms = sqrt(rms / Float(buffer.frameLength))
-
-            // Map the loudness to a scale factor.
-            let newScale = CGFloat(1.0 + (rms * 0.5))
-            DispatchQueue.main.async {
-                self.scale = newScale
+            
+            // Handle cancellation.
+            continuation.onTermination = { @Sendable _ in
+                mixerNode.removeTap(onBus: 0)
             }
         }
     }
