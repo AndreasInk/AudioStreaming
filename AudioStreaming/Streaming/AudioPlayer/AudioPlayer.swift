@@ -107,7 +107,7 @@ open class AudioPlayer {
     /// Keeps track of the player's state before being paused.
     private var stateBeforePaused: InternalState = .initial
 
-    var bufferStream: AsyncStream<AVAudioPCMBuffer>!
+    public var bufferStream: AsyncStream<AVAudioPCMBuffer>!
     
     /// The underlying `AVAudioEngine` object
     let audioEngine: AVAudioEngine
