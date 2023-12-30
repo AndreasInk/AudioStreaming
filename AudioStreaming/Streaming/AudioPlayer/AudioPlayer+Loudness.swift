@@ -14,7 +14,9 @@ public extension AudioPlayer {
     func streamOutputBuffer() {
         let mixerNode = audioEngine.mainMixerNode
         let format = mixerNode.outputFormat(forBus: 0) // Use the mixer's output format.
-        
+        guard bufferStream == nil else {
+            return
+        }
         bufferStream = AsyncStream<AVAudioPCMBuffer> { continuation in
             mixerNode.installTap(onBus: 0, bufferSize: 1024, format: format) { (buffer, time) in
                 // Yield the buffer to the stream.
