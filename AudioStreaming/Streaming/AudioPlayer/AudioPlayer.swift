@@ -164,7 +164,20 @@ open class AudioPlayer {
         configPlayerContext()
         configPlayerNode()
         setupEngine()
+        
+        eqNode = AVAudioUnitEQ(numberOfBands: 1)
+        let eqParams = eqNode.bands.first!
+        eqParams.filterType = .parametric
+        eqParams.frequency = 1000.0 // Arbitrary frequency
+        eqParams.bandwidth = 0.5 // Arbitrary bandwidth
+        eqParams.gain = 10.0 // Boost volume by 10 dB
+
+        audioEngine.attach(eqNode)
+        audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: nil)
+
     }
+
+private var eqNode: AVAudioUnitEQ!
 
     deinit {
         playerContext.audioPlayingEntry?.close()
