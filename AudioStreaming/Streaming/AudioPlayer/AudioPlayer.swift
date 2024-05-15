@@ -164,7 +164,12 @@ open class AudioPlayer {
         configPlayerContext()
         configPlayerNode()
         setupEngine()
-        activateAudioSession()
+        do {
+            try activateAudioSession()
+        } catch {
+
+        }
+       
     }
 
 // Ensure audio session is active
