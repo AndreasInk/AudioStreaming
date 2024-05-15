@@ -178,7 +178,6 @@ open class AudioPlayer {
         try audioSession.setCategory(.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .allowBluetooth])
         try audioSession.setMode(.default)
         try audioSession.setActive(true)
-        Logger.debug("Audio session activated", category: .audio)
     }
 
     deinit {
