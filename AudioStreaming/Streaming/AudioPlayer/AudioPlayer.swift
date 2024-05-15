@@ -164,20 +164,17 @@ open class AudioPlayer {
         configPlayerContext()
         configPlayerNode()
         setupEngine()
-        
-        eqNode = AVAudioUnitEQ(numberOfBands: 1)
-        let eqParams = eqNode.bands.first!
-        eqParams.filterType = .parametric
-        eqParams.frequency = 1000.0 // Arbitrary frequency
-        eqParams.bandwidth = 0.5 // Arbitrary bandwidth
-        eqParams.gain = 10.0 // Boost volume by 10 dB
-
-        audioEngine.attach(eqNode)
-        audioEngine.connect(eqNode, to: audioEngine.mainMixerNode, format: nil)
-
+        activateAudioSession()
     }
 
-private var eqNode: AVAudioUnitEQ!
+// Ensure audio session is active
+    private func activateAudioSession() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .allowBluetooth])
+        try audioSession.setMode(.default)
+        try audioSession.setActive(true)
+        Logger.debug("Audio session activated", category: .audio)
+    }
 
     deinit {
         playerContext.audioPlayingEntry?.close()
