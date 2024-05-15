@@ -117,23 +117,22 @@ final class AudioPlayerService {
         }
     }
 
-    private func configureAudioSession() {
-        do {
-            print("AudioSession category is AVAudioSessionCategoryPlayback")
-            try AVAudioSession.sharedInstance().setPreferredIOBufferDuration(0.1)
-        } catch let error as NSError {
-            print("Couldn't setup audio session category to Playback \(error.localizedDescription)")
-        }
+    // Ensure audio session is active
+    private func activateAudioSession() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .allowBluetooth])
+        try audioSession.setMode(.default)
+        try audioSession.setActive(true)
+        Logger.debug("Audio session activated", category: .audio)
     }
 
-    private func activateAudioSession() {
-        do {
-            print("AudioSession is active")
-            try AVAudioSession.sharedInstance().setActive(true, options: [])
-
-        } catch let error as NSError {
-            print("Couldn't set audio session to active: \(error.localizedDescription)")
-        }
+    // Ensure audio session is active
+    private func activateAudioSession() throws {
+        let audioSession = AVAudioSession.sharedInstance()
+        try audioSession.setCategory(.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .allowBluetooth])
+        try audioSession.setMode(.default)
+        try audioSession.setActive(true)
+        Logger.debug("Audio session activated", category: .audio)
     }
 
     private func deactivateAudioSession() {
