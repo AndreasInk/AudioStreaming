@@ -172,14 +172,6 @@ open class AudioPlayer {
        
     }
 
-// Ensure audio session is active
-    private func activateAudioSession() throws {
-        let audioSession = AVAudioSession.sharedInstance()
-        try audioSession.setCategory(.playAndRecord, options: [.mixWithOthers, .allowBluetoothA2DP, .allowBluetooth])
-        try audioSession.setMode(.default)
-        try audioSession.setActive(true)
-    }
-
     deinit {
         playerContext.audioPlayingEntry?.close()
         clearQueue()
