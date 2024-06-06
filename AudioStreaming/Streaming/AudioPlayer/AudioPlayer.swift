@@ -165,7 +165,6 @@ open class AudioPlayer {
         configPlayerNode()
         setupEngine()
         do {
-            try activateAudioSession()
         } catch {
 
         }

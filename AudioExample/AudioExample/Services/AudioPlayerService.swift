@@ -52,12 +52,10 @@ final class AudioPlayerService {
     }
 
     func play(url: URL) {
-        activateAudioSession()
         player.play(url: url)
     }
 
     func queue(url: URL) {
-        activateAudioSession()
         player.queue(url: url)
     }
 
