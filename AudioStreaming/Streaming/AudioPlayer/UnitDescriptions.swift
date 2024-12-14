@@ -11,9 +11,9 @@ enum UnitDescriptions {
     static var output: AudioComponentDescription = {
         var desc = AudioComponentDescription()
         desc.componentType = kAudioUnitType_Output
-        #if os(macOS) || os(visionOS)
+        #if os(macOS)
             desc.componentSubType = kAudioUnitSubType_DefaultOutput
-        #else
+        #elseif os(iOS)
             desc.componentSubType = kAudioUnitSubType_RemoteIO
         #endif
         desc.componentManufacturer = kAudioUnitManufacturer_Apple
